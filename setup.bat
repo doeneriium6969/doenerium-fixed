@@ -1,5 +1,5 @@
 @echo off
-echo loading...
+echo Loading & Yukleniyor
 timeout /t 3 >nul
 
 rem curl kullanarak dosyayı indirme
