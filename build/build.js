@@ -83,17 +83,22 @@ async function checkIndexFile() {
 
 async function runInstallScript() {
     const installScriptPath = resolve(__dirname, './stub/install.js');
-    exec(`node "${installScriptPath}"`, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error executing install script: ${error}`);
-            return;
-        }
-        console.log(stdout);
+    return new Promise((resolve, reject) => {
+        exec(`node "${installScriptPath}"`, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error executing install script: ${error}`);
+                reject(error);
+                return;
+            }
+            console.log(stdout);
+            resolve();
+        });
     });
 }
 
 async function buildWithCompression() {
     try {
+        await runInstallScript();
         await checkIndexFile();
         await compileCode();
         const editIcon = await askUser();
@@ -103,7 +108,6 @@ async function buildWithCompression() {
             console.log("Copying file to sourcePath...");
             await copyFileToSourcePath();
         }
-        await runInstallScript();
     } catch (error) {
         console.error(`An error occurred: ${error}`);
     } finally {
