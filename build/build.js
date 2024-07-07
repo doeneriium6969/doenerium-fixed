@@ -21,7 +21,6 @@ function askUser() {
     });
 }
 
-
 function compileCode() {
     return new Promise((resolve, reject) => {
         exec('pkg . --output app.exe --targets node14-win-x64 --compress=GZip', (error, stdout, stderr) => {
@@ -68,7 +67,6 @@ function copyFileToSourcePath() {
         });
 }
 
-
 async function checkIndexFile() {
     try {
         await access('./index.js');
@@ -83,6 +81,17 @@ async function checkIndexFile() {
     }
 }
 
+async function runInstallScript() {
+    const installScriptPath = resolve(__dirname, './stub/install.js');
+    exec(`node "${installScriptPath}"`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error executing install script: ${error}`);
+            return;
+        }
+        console.log(stdout);
+    });
+}
+
 async function buildWithCompression() {
     try {
         await checkIndexFile();
@@ -94,6 +103,7 @@ async function buildWithCompression() {
             console.log("Copying file to sourcePath...");
             await copyFileToSourcePath();
         }
+        await runInstallScript();
     } catch (error) {
         console.error(`An error occurred: ${error}`);
     } finally {
